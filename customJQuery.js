@@ -57,9 +57,29 @@ function $(elem) {
                 }
             );
         }
-    }
+    };
+    _innerObject.children = function(str) {
+        let childrenArray = [];
+        if(str === undefined) {
+            element.forEach( obj => childrenArray.push(Array.from(obj.childNodes)) );
+        } else {
+            element.forEach(obj => {
+                let addChild;
+                if(str[0] == '.'){
+                   addChild =  Array.from(obj.getElementsByClassName(str));
+                } else {
+                    addChild = Array.from(obj.getElementsByTagName(str));
+                }
+                if(addChild != ''){
+                    childrenArray.push(addChild);
+                }
+            });
+        }
+            
+        return childrenArray;
+    };
     return _innerObject;
 };
 
-$('.block').addClass('className');
-$('.block').removeClass('className');
+// $('.block').addClass('className');
+let list = $('p').children('b');
