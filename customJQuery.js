@@ -81,13 +81,16 @@ function $(elem) {
     _innerObject.empty = function() {
         element.forEach(obj => obj.innerHTML = '')
     };
-    _innerObject.click = function(handler) {
+    _innerObject.css = function(propertyName){
+
+    }
+    _innerObject.click = function(handler = (event) => alert(event.target.nodeName)) {
         element.forEach( obj => obj.addEventListener('click', handler) );
     }
 
     return _innerObject;
 };
 
-$('b').click(() => alert(2345));
-// $('.block').addClass('className');
+alert($('b').click());
+$('.block').addClass('className');
 let list = $('p').children('b');
