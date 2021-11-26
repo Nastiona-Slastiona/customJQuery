@@ -78,6 +78,10 @@ function $(elem) {
             
         return childrenArray;
     };
+    _innerObject.empty = function() {
+        element.forEach(obj => obj.innerHTML = '')
+    }
+
     return _innerObject;
 };
 
