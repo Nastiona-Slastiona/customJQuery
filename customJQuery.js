@@ -35,6 +35,29 @@ function $(elem) {
         })
         
     };
+    _innerObject.attr = function(attributeName, value){
+        if(value === undefined){
+            if(Object.prototype.toString.call(attributeName) == '[object Object]'){
+                for (let key in attributeName){
+                    alert(key);
+                    element.forEach(obj => {
+                        obj.setAttribute(key, attributeName[key]);
+                    })
+                }
+            } else if(element[0].hasAttribute(attributeName)){
+                return element[0].getAttribute(attributeName);
+            } 
+        } else {
+            element.forEach(
+                obj => {
+                    if(Object.prototype.toString.call(value) == '[object Function]'){
+                        value = value();
+                    } 
+                    obj.setAttribute(attributeName, value);
+                }
+            );
+        }
+    }
     return _innerObject;
 };
 
