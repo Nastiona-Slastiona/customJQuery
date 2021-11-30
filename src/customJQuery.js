@@ -1,36 +1,49 @@
 function $(elem) {
-    const _innerObject = {};
+    const innerObject = {};
     const element = document.querySelectorAll(elem);
 
-    _innerObject.addClass = function(className) {
+    innerObject.addClass = function(...classNames) {
         
         element.forEach(obj => {
-            obj.classList.add(className);
+
+            classNames.forEach( className => {
+                obj.classList.add(className);
+            });
+
         })
     };
 
-    _innerObject.removeClass = function(className) {
+    innerObject.removeClass = function(...classNames) {
         
         element.forEach(obj => {
-            obj.classList.remove(className);
-        })
+            classNames.forEach( className => {
+                obj.classList.remove(className);
+            });
+        });
     };
 
-    _innerObject.append = function(...className) {
+    innerObject.append = function(...contentData) {
 
         element.forEach(obj => {
-            className.forEach(classToAppend => obj.classList.append(classToAppend));
-        })
+            contentData.forEach(contentInfo => {
+                const tempInnerHtml = obj.innerHTML;
+                obj.innerHTML = tempInnerHtml + contentInfo;
+            });
+        });
     };
 
-    _innerObject.remove = function() {
+    innerObject.remove = function(selector) {
 
         element.forEach(obj => {
-            obj.remove();
+            if(Object.prototype.toString.call(selector) === '[object Undefined]'){
+                obj.remove();
+            } else {
+                obj.remove(selector);
+            }
         })
     };
 
-    _innerObject.text = function(str) {
+    innerObject.text = function(str) {
 
         if (str === undefined){
             let res = '';
@@ -45,7 +58,7 @@ function $(elem) {
         
     };
 
-    _innerObject.attr = function(attributeName, value){
+    innerObject.attr = function(attributeName, value){
 
         if(value === undefined){
 
@@ -72,7 +85,7 @@ function $(elem) {
         }
     };
 
-    _innerObject.children = function(str) {
+    innerObject.children = function(str) {
         const childrenArray = [];
 
         if(str === undefined) {
@@ -97,11 +110,11 @@ function $(elem) {
         return childrenArray;
     };
 
-    _innerObject.empty = function() {
+    innerObject.empty = function() {
         element.forEach( obj => obj.innerHTML = '' )
     };
 
-    _innerObject.css = function(propertyName, value){
+    innerObject.css = function(propertyName, value){
 
         if(Object.prototype.toString.call(value) === '[object Undefined]') {
             const cssProperties = window.getComputedStyle(element[0]);
@@ -142,11 +155,11 @@ function $(elem) {
 
     };
 
-    _innerObject.click = function(handler = (event) => alert(event.target.nodeName)) {
+    innerObject.click = function(handler = (event) => alert(event.target.nodeName)) {
         element.forEach( obj => obj.addEventListener('click', handler) );
     };
 
-    return _innerObject;
+    return innerObject;
 };
 
 
