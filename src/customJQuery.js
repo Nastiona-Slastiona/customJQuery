@@ -111,21 +111,28 @@ function $(elem) {
                 propertyName.forEach( obj => {
                     propArray.push(obj + ': ' + cssProperties.getPropertyValue(obj));
                 });
+                
                 return propArray;
+            
             } else {
+
                 if(Object.prototype.toString.call(propertyName) === '[object String]'){
+                
                     if ( propertyName.split(' ').length < 2 ) {
                         return propertyName + ': ' + cssProperties.getPropertyValue(propertyName);
+                    
                     } else {
                         element[0].style.cssText = propertyName; 
                     }
                 } else {
+                
                     for (let key in propertyName){
                         element[0].style.setProperty(key, propertyName[key]);
                     }
                 }
 
             }
+            
         } else {
 
             if(Object.prototype.toString.call(value) === '[object Number]') {
