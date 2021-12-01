@@ -1,10 +1,15 @@
 function $(elem) {
     const innerObject = {};
-    const element = document.querySelectorAll(elem);
+    innerObject.element = document.querySelectorAll(elem);
+    innerObject.array = [];
+
+    innerObject.toString = function() {
+        return innerObject.array.toString();
+    }
 
     innerObject.addClass = function(...classNames) {
         
-        element.forEach(obj => {
+        innerObject.element.forEach(obj => {
 
             classNames.forEach( className => {
                 obj.classList.add(className);
@@ -15,7 +20,7 @@ function $(elem) {
 
     innerObject.removeClass = function(...classNames) {
         
-        element.forEach(obj => {
+        innerObject.element.forEach(obj => {
             classNames.forEach( className => {
                 obj.classList.remove(className);
             });
@@ -24,7 +29,7 @@ function $(elem) {
 
     innerObject.append = function(...contentData) {
 
-        element.forEach(obj => {
+        innerObject.element.forEach(obj => {
             contentData.forEach(contentInfo => {
                 const tempInnerHtml = obj.innerHTML;
                 obj.innerHTML = tempInnerHtml + contentInfo;
@@ -34,7 +39,7 @@ function $(elem) {
 
     innerObject.remove = function(selector) {
 
-        element.forEach(obj => {
+        innerObject.element.forEach(obj => {
             if(Object.prototype.toString.call(selector) === '[object Undefined]'){
                 obj.remove();
             } else {
@@ -47,12 +52,12 @@ function $(elem) {
 
         if (str === undefined){
             let res = '';
-            element.forEach(obj => {
+            innerObject.element.forEach(obj => {
                res += obj.textContent + '\n';
             })
             return res;
         }
-        element.forEach(obj => {
+        innerObject.element.forEach(obj => {
             obj.textContent = str;
         })
         
@@ -64,16 +69,15 @@ function $(elem) {
 
             if(Object.prototype.toString.call(attributeName) == '[object Object]'){
                 for (let key in attributeName){
-                    alert(key);
-                    element.forEach(obj => {
+                    innerObject.element.forEach(obj => {
                         obj.setAttribute(key, attributeName[key]);
                     })
                 }
-            } else if(element[0].hasAttribute(attributeName)){
-                return element[0].getAttribute(attributeName);
+            } else if(innerObject.element[0].hasAttribute(attributeName)){
+                return innerObject.element[0].getAttribute(attributeName);
             } 
         } else {
-            element.forEach(
+            innerObject.element.forEach(
                 obj => {
 
                     if(Object.prototype.toString.call(value) == '[object Function]'){
@@ -85,39 +89,28 @@ function $(elem) {
         }
     };
 
-    innerObject.children = function(str) {
-        const childrenArray = [];
+    innerObject.children = function() {
+        innerObject.array = [];
+        innerObject.element.forEach( obj => {
+            for ( let child of obj.children ) {
+                innerObject.array.push(child.nodeName);
+            }
 
-        if(str === undefined) {
-            element.forEach( obj => childrenArray.push( Array.from(obj.childNodes) ) );
-        } else {
+        });
 
-            element.forEach(obj => {
-                let addChild;
-
-                if(str[0] == '.'){
-                   addChild =  Array.from( obj.getElementsByClassName(str) );
-                } else {
-                    addChild = Array.from( obj.getElementsByTagName(str) );
-                }
-
-                if(addChild != ''){
-                    childrenArray.push(addChild);
-                }
-            });
-        }
-            
-        return childrenArray;
+        return innerObject;
     };
 
     innerObject.empty = function() {
-        element.forEach( obj => obj.innerHTML = '' )
+        innerObject.element.forEach( obj => obj.innerHTML = '' );
     };
 
     innerObject.css = function(propertyName, value){
+        const node = innerObject.array.length != 0 ?
+            document.querySelectorAll(innerObject.array[0])[0] : innerObject.element[0];
 
         if(Object.prototype.toString.call(value) === '[object Undefined]') {
-            const cssProperties = window.getComputedStyle(element[0]);
+            const cssProperties = window.getComputedStyle(node);
 
             if(Object.prototype.toString.call(propertyName) === '[object Array]') {
                 const propArray = [];
@@ -135,12 +128,12 @@ function $(elem) {
                         return propertyName + ': ' + cssProperties.getPropertyValue(propertyName);
                     
                     } else {
-                        element[0].style.cssText = propertyName; 
+                        node.style.cssText = propertyName; 
                     }
                 } else {
                 
                     for (let key in propertyName){
-                        element[0].style.setProperty(key, propertyName[key]);
+                        node.style.setProperty(key, propertyName[key]);
                     }
                 }
 
@@ -149,14 +142,15 @@ function $(elem) {
         } else {
 
             if(Object.prototype.toString.call(value) === '[object Number]') {
-                element[0].style.setProperty(propertyName, value + 'px');
-            } else element[0].style.setProperty(propertyName, value);
+                node.style.setProperty(propertyName, value + 'px');
+            } else node.style.setProperty(propertyName, value);
         }
 
     };
 
-    innerObject.click = function(handler = (event) => alert(event.target.nodeName)) {
-        element.forEach( obj => obj.addEventListener('click', handler) );
+    innerObject.click = function(handler = (event) => alert(event.target.nodeName)) {   
+        innerObject.element.forEach( obj => obj.addEventListener('click', handler) );
+        return innerObject;
     };
 
     return innerObject;

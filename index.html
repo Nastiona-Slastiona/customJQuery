@@ -3,19 +3,16 @@
     <head>
         <meta charset="utf-8">
         <title>remove demo</title>
-        <style>
-            p {
-                background: yellow;
-                margin: 6px 0;
-            }
-            </style>
+        <link rel="stylesheet" href="./styles/css/index.css">
     </head>
-    <body>
+    <body class='main-style' id='bodyId'>
         <div class="block">Block</div>
-        <p class="first">Hello</p>
-        <p><b>Test</b> Paragraph.</p>
+        <p class="first string--improved">Hello</p>
+        <p class='string--improved'><b>Test</b> Paragraph.</p>
         how are
-        <p>you?</p>
+        <p class='string--improved cssString'>you?</p>
+        <div class='image-container'>
+            <img src='/static/images/tribore.jpg'/></div>
         <button>Call remove() on paragraphs</button>
         <script src="./src/customJQuery.js"></script>
         <script src="./src/test_customJQuery.js"></script>
