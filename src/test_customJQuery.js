@@ -29,7 +29,8 @@ setTimeout( () => $('.first').empty(), 8000); // Remove all chiled nodes
 
 
 $('.image-container').css('border: solid rgb(255, 0, 255) 5px; background: #fff;'); //Set CSS-Style
-setTimeout( () => $('.main-style').children().css('background: yellow; color: #000;'));
+setTimeout( () => $('.first').text('Yellow'), 8500 );
+setTimeout( () => $('.main-style').children().css('background: yellow; color: #000'), 9000);
 
 $('.main-style').click((event) => alert(event.target.nodeName)); //Set eventHadler after click
 $('.string--improved').click(function() {
