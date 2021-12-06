@@ -1,6 +1,6 @@
 function $(elem) {
     const innerObject = {};
-    innerObject.element = document.querySelectorAll(elem);
+    innerObject.elements = document.querySelectorAll(elem);
     innerObject.array = [];
 
     innerObject.toString = function() {
@@ -8,91 +8,87 @@ function $(elem) {
     }
 
     innerObject.addClass = function(...classNames) {
-        
-        innerObject.element.forEach(obj => {
-
-            classNames.forEach( className => {
-                obj.classList.add(className);
+        innerObject.elements.forEach(element => {
+            classNames.forEach(className => {
+                if(typeof className == 'function') {
+                    element.classList.add(className());
+                   
+                } else {
+                    element.classList.add(className);
+                }
             });
 
         })
     };
 
     innerObject.removeClass = function(...classNames) {
-        
-        innerObject.element.forEach(obj => {
+        innerObject.elements.forEach(element => {
             classNames.forEach( className => {
-                obj.classList.remove(className);
+                element.classList.remove(className);
             });
         });
     };
 
     innerObject.append = function(...contentData) {
-
-        innerObject.element.forEach(obj => {
+        innerObject.elements.forEach(element => {
             contentData.forEach(contentInfo => {
-                const tempInnerHtml = obj.innerHTML;
-                obj.innerHTML = tempInnerHtml + contentInfo;
+                element.innerHTML += contentInfo;
             });
         });
     };
 
     innerObject.remove = function(selector) {
-
-        innerObject.element.forEach(obj => {
-            if(Object.prototype.toString.call(selector) === '[object Undefined]'){
-                obj.remove();
+        innerObject.elements.forEach(element => {
+            if(typeof selector == 'undefined'){
+                element.remove();
             } else {
-                obj.remove(selector);
+                element.remove(selector);
             }
         })
     };
 
     innerObject.text = function(str) {
-
         if (str === undefined){
             let res = '';
-            innerObject.element.forEach(obj => {
-               res += obj.textContent + '\n';
-            })
+            innerObject.elements.forEach(element => {
+               res += element.textContent + '\n';
+            });
+
             return res;
         }
-        innerObject.element.forEach(obj => {
-            obj.textContent = str;
+        innerObject.elements.forEach(element => {
+            element.textContent = str;
         })
         
     };
 
     innerObject.attr = function(attributeName, value){
-
         if(value === undefined){
-
-            if(Object.prototype.toString.call(attributeName) == '[object Object]'){
-                for (let key in attributeName){
-                    innerObject.element.forEach(obj => {
-                        obj.setAttribute(key, attributeName[key]);
+            if(attributeName instanceof Object){
+                for (const key in attributeName){
+                    innerObject.elements.forEach(element => {
+                        element.setAttribute(key, attributeName[key]);
                     })
                 }
-            } else if(innerObject.element[0].hasAttribute(attributeName)){
-                return innerObject.element[0].getAttribute(attributeName);
-            } 
-        } else {
-            innerObject.element.forEach(
-                obj => {
 
-                    if(Object.prototype.toString.call(value) == '[object Function]'){
+            } else return innerObject.elements[0]
+                    .getAttribute(attributeName);
+
+        } else {
+            innerObject.elements.forEach(element => {
+                    if(typeof value == 'function'){
                         value = value();
                     } 
-                    obj.setAttribute(attributeName, value);
-                }
-            );
+
+                    element.setAttribute(attributeName, value);
+            });
         }
     };
 
     innerObject.children = function() {
         innerObject.array = [];
-        innerObject.element.forEach( obj => {
-            for ( let child of obj.children ) {
+        innerObject.elements.forEach(element => {
+            for (const child of element.children) {
                 innerObject.array.push(child.nodeName);
             }
 
@@ -102,54 +98,58 @@ function $(elem) {
     };
 
     innerObject.empty = function() {
-        innerObject.element.forEach( obj => obj.innerHTML = '' );
+        innerObject.elements.forEach(element => element.innerHTML = '' );
     };
 
     innerObject.css = function(propertyName, value){
         const node = innerObject.array.length != 0 ?
-            document.querySelectorAll(innerObject.array[0])[0] : innerObject.element[0];
+            document.querySelectorAll(innerObject.array[0])[0] : 
+            innerObject.elements[0];
 
-        if(Object.prototype.toString.call(value) === '[object Undefined]') {
+        if(typeof value == 'undefined') {
             const cssProperties = window.getComputedStyle(node);
 
-            if(Object.prototype.toString.call(propertyName) === '[object Array]') {
+            if(propertyName instanceof Array) {
                 const propArray = [];
-                propertyName.forEach( obj => {
-                    propArray.push(obj + ': ' + cssProperties.getPropertyValue(obj));
+                propertyName.forEach(element => {
+                    propArray.push(
+                        element + ': ' + cssProperties.getPropertyValue(element)
+                    );
                 });
                 
                 return propArray;
             
-            } else {
-
-                if(Object.prototype.toString.call(propertyName) === '[object String]'){
-                
-                    if ( propertyName.split(' ').length < 2 ) {
-                        return propertyName + ': ' + cssProperties.getPropertyValue(propertyName);
-                    
-                    } else {
-                        node.style.cssText = propertyName; 
-                    }
-                } else {
-                
-                    for (let key in propertyName){
-                        node.style.setProperty(key, propertyName[key]);
-                    }
-                }
-
-            }
+            } 
             
-        } else {
+            if(typeof propertyName == 'string'){
+                if (propertyName.split(' ').length < 2) {
+                    return propertyName + ': ' + 
+                        cssProperties.getPropertyValue(propertyName);
+                
+                }
+                
+                node.style.cssText = propertyName;
 
-            if(Object.prototype.toString.call(value) === '[object Number]') {
+            } else {
+                for (const key in propertyName){
+                    node.style.setProperty(key, propertyName[key]);
+                }
+            }
+
+        } else {
+            if(typeof value == 'number') {
                 node.style.setProperty(propertyName, value + 'px');
+                
             } else node.style.setProperty(propertyName, value);
         }
-
     };
 
-    innerObject.click = function(handler = (event) => alert(event.target.nodeName)) {   
-        innerObject.element.forEach( obj => obj.addEventListener('click', handler) );
+    innerObject.click = function(
+        handler = (event) => alert(event.target.nodeName)) {   
+        innerObject.elements.forEach(
+            element => element.addEventListener('click', handler)
+        );
+
         return innerObject;
     };
 
