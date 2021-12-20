@@ -1,0 +1,22 @@
+.main-style {
+  background: rgba(99, 8, 99, 0.5);
+}
+
+.string--improved {
+  background: rgb(83, 27, 136);
+  margin: 6px 0;
+  color: rgb(255, 240, 181);
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-size: 30px;
+}
+
+.image-container {
+  display: flex;
+  width: 100%;
+  justify-content: center;
+}
+
+.image-instance {
+  display: flex;
+  width: 50%;
+}
